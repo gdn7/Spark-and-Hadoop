@@ -1,0 +1,162 @@
+
+------Introduction------
+mysql -u root -p # to connect to mysql
+show databases; #  shows all the databases
+use retail_db; # selecting 'retail_db' database
+show tables; #shows all the tables in retail_db
+select * from departments; #lists all the records in table 'departments'
+
+
+#to connect to mysql using sqoop dont use root  but use database name
+
+
+#to validate hive , sqoop , pyspark just type and you can go int to the respective service.
+#to validate HDFS
+
+touch testing # create a file 'testing'
+hadoop fs -put testing /user/cloudera #move file 'testing' to hdfs in  the location /uder/cloudera
+
+
+spark-shell #to validate spark service
+impala-shell #to validate impala service
+
+#learn on impala vs hive , what is hue?
+
+# servicename --version gives the version of the service used
+#zookeeper is needed for hbase
+
+#go here to follow and practise all the sqoop commands
+#https://github.com/dgadiraju/code/blob/master/hadoop/edw/cloudera/sqoop/sqoop_demo.txt 
+
+#to chsnge the spark settings to change permissions
+sudo -u hdfs hadoop fs -chown -R hdfs /user/spark
+sudo -u hdfs hadoop fs -chmod -R 777 /user/spark
+
+
+-----------SQOOP COMMANDS--------------
+ps -fu hdfs
+ps -fu yarn
+- i node
+ps -ef|grep -i manager #tocheck if resource manager is running
+
+sqoop list-databases \
+--connect "jdbc:mysql://quickstart.cloudera:3306" \
+--username retail_dba \ #dba
+--password cloudera
+
+sqoop list-tables \
+--connect "jdbc:mysql://quickstart.cloudera:3306" \
+--username retail_db \ #db
+--password cloudera
+
+sqoop eval \
+--connect "jdbc:mysql://quickstart.cloudera:3306" \
+--username retail_db \ #db
+--password cloudera
+--query "select * from departments"
+
+##sqoop import {generic-args} {import-args} *general syntax* read on sqoop user guide
+
+
+sqoop import-all-tables \
+  -m 12 \ # number of mappers , here number of splits=12
+  --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" \
+  --username=retail_dba \
+  --password=cloudera \
+  --as-avrodatafile \ #learn about other file types
+  --warehouse-dir=/user/hive/warehouse/retail_stage.db
+  
+  
+  hadoop fs -ls user/hive/warehouse/retail_stage
+  
+  
+  hive
+  create database sqoop_import
+  drop table #table name
+  
+  
+  sqoop import-all-tables \
+  --num-mappers 1 \
+  --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" \
+  --username=retail_dba \
+  --password=cloudera \
+  --hive-import \
+  --hive-overwrite \
+  --create-hive-table \
+  --compress \
+  --compression-codec org.apache.hadoop.io.compress.SnappyCodec \
+  --outdir java_files
+  
+hadoop fs -cat /uder/cloudera/departments/part-m-0000x #x is the mapper number  
+  
+  
+  -- Boundary Query and columns
+sqoop import \
+  --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" \
+  --username=retail_dba \
+  --password=cloudera \
+  --table departments \
+  --target-dir /user/cloudera/departments \
+  -m 2 \
+  --boundary-query "select 2, 8 from departments limit 1" \
+  --columns department_id,department_name
+  
+  
+  -- query and split-by
+sqoop import \
+  --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" \
+  --username=retail_dba \
+  --password=cloudera \
+  --query="select * from orders join order_items on orders.order_id = order_items.order_item_order_id where \$CONDITIONS" \
+  --target-dir /user/cloudera/order_join \
+  --split-by order_id \
+  --num-mappers 4
+  
+  # boundary query uses --table but query uses the the actual query itself they both are mutually exclusive cannot be used together
+  
+  
+  #appending into the exisitng table:
+  -- Copying into existing table or directory (append)
+-- Customizing number of threads (num-mappers)
+-- Changing delimiter
+sqoop import \
+  --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" \
+  --username=retail_dba \
+  --password=cloudera \
+  --table departments \
+  --target-dir /user/hive/warehouse/retail_ods.db/departments \
+  --append \
+  --fields-terminated-by '|' \
+  --lines-terminated-by '\n' \
+  --num-mappers 1 \
+  --outdir java_files
+  
+  
+# creating records
+vi departments_export
+cat departments_export #shows the records
+
+----------- SQOOP EXPORT----------
+
+sqoop export --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" \
+  --username retail_dba \
+  --password cloudera \
+  --table departments \
+  --export-dir /user/cloudera/sqoop_import/departments_export \
+  --batch \
+  --outdir java_files \
+  -m 1 \
+  --update-key department_id \
+  --update-mode allowinser
+
+  
+sqoop export --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" \
+  --username retail_dba \
+  --password cloudera \
+  --table departments \
+  --export-dir /user/cloudera/sqoop_import/departments_export \
+  --batch \
+  --outdir java_files \
+  -m 1 \
+  --update-key department_id \
+  --update-mode allowinsert
