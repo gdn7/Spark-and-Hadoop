@@ -1,4 +1,4 @@
-#Introduction
+
 #spark-shell
 #pyspark
 #SparkContext
@@ -473,6 +473,7 @@ def getTopN(rec, topN):
   x = list(sorted(rec[1], key=lambda k: float(k.split(",")[4]), reverse=True))
   import itertools
   return (y for y in list(itertools.islice(x, 0, topN)))
+
 
 for i in productsMap.groupByKey().flatMap(lambda x: getTopN(x, 2)).collect(): print(i)
 
