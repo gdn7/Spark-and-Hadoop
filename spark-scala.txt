@@ -37,7 +37,7 @@ version := "1.0"
 scalaVersion := "2.10.4"
 libraryDependencies += "org.apache.spark" %% "spark-core" % "1.2.1"
 
-#Copy below 9 lines into src/main/scala/SimpleApp.scala
+ #Copy below 9 lines into src/main/scala/SimpleApp.scala
 import org.apache.spark.SparkContext, org.apache.spark.SparkConf
 object SimpleApp {
   def main(args: Array[String]) {
