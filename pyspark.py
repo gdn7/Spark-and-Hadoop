@@ -22,7 +22,6 @@ df = sqlContext.load(source="jdbc", url=jdbcurl, dbtable="departments")
 
 for rec in df.collect():
   print(rec)
-
 df.count()
 
 ##############################################################################
