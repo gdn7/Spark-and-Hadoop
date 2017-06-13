@@ -1,5 +1,5 @@
 
--------Introduction------
+-------Introduction-------
 mysql -u root -p # to connect to mysql
 show databases; #  shows all the databases
 use retail_db; # selecting 'retail_db' database
