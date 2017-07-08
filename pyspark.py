@@ -11,6 +11,7 @@
 #Either you need to run pyspark with driver-class-path or set environment variable with os.environment
 
 
+
 pyspark --driver-class-path /usr/share/java/mysql-connector-java.jar
 os.environ['SPARK_CLASSPATH'] = "/usr/share/java/mysql-connector-java.jar"
 
@@ -24,7 +25,7 @@ for rec in df.collect():
   print(rec)
 df.count()
 
-##############################################################################
+###################################################################################
 
 #Developing simple scala based applications for spark
 #Save this to a file with py extension
@@ -115,7 +116,7 @@ departmentsData.toJSON().saveAsTextFile("/user/cloudera/pyspark/departmentsJson"
 #Validating the data
 hadoop fs -cat /user/cloudera/pyspark/departmentsJson/part*
 
-##############################################################################
+######################################################################################
 # Developing word count program
 # Create a file and type few lines and save it as wordcount.txt and copy to HDFS
 # to /user/cloudera/wordcount.txt
