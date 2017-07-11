@@ -10,8 +10,6 @@
 #It works only from spark 1.3.0 or later
 #Either you need to run pyspark with driver-class-path or set environment variable with os.environment
 
-
-
 pyspark --driver-class-path /usr/share/java/mysql-connector-java.jar
 os.environ['SPARK_CLASSPATH'] = "/usr/share/java/mysql-connector-java.jar"
 
