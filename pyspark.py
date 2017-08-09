@@ -43,7 +43,7 @@ spark-submit --master local saveFile.py
 #master yarn will run in yarn mode
 spark-submit --master yarn saveFile.py
 
-##############################################################################
+#############################################################################
 
 # Load data from HDFS and storing results back to HDFS using Spark
 from pyspark import SparkContext
@@ -131,7 +131,6 @@ for i in dataReduceByKey.collect():
   print(i)
 
 ##############################################################################
-
 # Join disparate datasets together using Spark
 # Problem statement, get the revenue and number of orders from order_items on daily basis
 ordersRDD = sc.textFile("/user/cloudera/sqoop_import/orders")
