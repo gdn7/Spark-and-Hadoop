@@ -227,7 +227,6 @@ joinAggData.collect().foreach(println)
 #sum
 val ordersRDD = sc.textFile("/user/cloudera/sqoop_import/orders")
 ordersRDD.count()
-
 val orderItemsRDD = sc.textFile("/user/cloudera/sqoop_import/order_items")
 val orderItemsMap = orderItemsRDD.map(rec => (rec.split(",")(4).toDouble))
 orderItemsMap.take(5).foreach(println)
