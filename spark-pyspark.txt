@@ -3,6 +3,7 @@
 #SparkContext
 #SQLContext
 #HiveContext
+
 #spark-sql (only latest version)
 #JDBC
 #To connect to remote database using jdbc
